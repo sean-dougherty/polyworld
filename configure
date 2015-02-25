@@ -14,14 +14,20 @@ import sys
 ######################################################################
 Conf='Makefile.conf'
 
-Supported_OSes = ['linux', 'darwin']
+Supported_OSes = ['linux', 'darwin', 'cygwin']
 Supported_OSes_display = ','.join(Supported_OSes)
 
 Supported_Toolchains = ['gcc', 'llvm']
 Supported_Toolchains_display = ','.join(Supported_Toolchains)
 
 Default_CXX = {'linux': 'g++',
-               'darwin': 'clang++'}
+               'darwin': 'clang++',
+               'cygwin': 'g++'}
+
+Default_qmake = {'linux': 'qmake',
+                 'darwin': 'qmake',
+                 'cygwin': 'qmake-qt4'}
+
 
 ######################################################################
 #
@@ -61,6 +67,8 @@ def main():
     #
     if not config['os']:
         config['os'] = platform.system().lower()
+        if 'cygwin' in config['os']:
+            config['os'] = 'cygwin'
     else:
         config['os'] = config['os'][0]
     
@@ -91,7 +99,7 @@ def main():
     # Verify qmake
     #
     if not config['qmake']:
-        config['qmake'] = 'qmake'
+        config['qmake'] = Default_qmake[config['os']] 
     else:
         config['qmake'] = config['qmake'][0]
     if not check_exit('which '+config['qmake']):

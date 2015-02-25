@@ -1205,14 +1205,7 @@ char* sgets( char* string, size_t size, FILE* file )
 
 double hirestime( void )
 {
-#ifdef __linux__
-
-	struct timeval tv;
-	gettimeofday( &tv, NULL );
-
-	return (double)tv.tv_sec + (double)tv.tv_usec/1000000.0;
-
-#else /* this seems to be Apple-specific, referencing "mach"... */
+#if __APPLE__
 
     static uint32_t num = 0;
     static uint32_t denom = 0;
@@ -1230,6 +1223,13 @@ double hirestime( void )
     }
     now = mach_absolute_time();
     return (double)(now * (double)num / denom / NSEC_PER_SEC);
+
+#else
+
+	struct timeval tv;
+	gettimeofday( &tv, NULL );
+
+	return (double)tv.tv_sec + (double)tv.tv_usec/1000000.0;
 
 #endif
 }

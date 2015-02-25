@@ -10,7 +10,7 @@
 
 #include "utils/misc.h"
 
-namespace termio
+namespace ui_termio
 {
 
 	bool isKeyPressed()
